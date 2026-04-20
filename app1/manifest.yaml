@@ -24,8 +24,6 @@ spec:
       - name: app1
         image: pavankumarsri/app1:1.0.0
 ---
-# Service must be NodePort -- old ALB ingress controller uses target-type: instance
-# ALB registers EC2 nodes, traffic comes in on NodePort, then forwards to pod
 apiVersion: v1
 kind: Service
 metadata:
@@ -41,23 +39,23 @@ spec:
     port: 80
     targetPort: 80
 ---
-  apiVersion: networking.k8s.io/v1
-  kind: Ingress
-  metadata:
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   name: app1
   annotations:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/certificate-arn:arn:aws:acm:us-east-1:593300579669:certificate/f3a61501-8b41-498b-8e89-99161c0efbc8
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:593300579669:certificate/f3a61501-8b41-498b-8e89-99161c0efbc8
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/tags: Environment=dev,Project=roboshop
     alb.ingress.kubernetes.io/target-type: ip
-  spec:
+spec:
   rules:
-  - host: "app1.daws88s.space"
+  - host: app1.daws88s.space
     http:
       paths:
-      - pathType: Prefix
-        path: "/"
+      - path: /
+        pathType: Prefix
         backend:
           service:
             name: app1
