@@ -3,20 +3,20 @@ kind: Deployment
 metadata:
   name: app2
   labels:
-    project: roboshop1
+    project: roboshop
     tier: frontend
     component: app2
 spec:
   replicas: 2
   selector:
     matchLabels:
-      project: roboshop1
+      project: roboshop
       tier: frontend
       component: app2
   template:
     metadata:
       labels:
-        project: roboshop1
+        project: roboshop
         tier: frontend
         component: app2
     spec:
@@ -24,14 +24,14 @@ spec:
       - name: app2
         image: pavankumarsri/app2:1.0.0
 ---
-  apiVersion: v1
-  kind: Service
-  metadata:
+apiVersion: v1
+kind: Service
+metadata:
   name: app2
-  spec:
+spec:
   type: NodePort
   selector:
-    project: roboshop1
+    project: roboshop
     tier: frontend
     component: app2
   ports:
@@ -39,21 +39,24 @@ spec:
     port: 80
     targetPort: 80
 ---
- apiVersion: networking.k8s.io/v1beta1
- kind: Ingress
- metadata:
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   name: app2
   annotations:
-    kubernetes.io/ingress.class: "alb"
+    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/tags: Environment=dev,Project=roboshop1
-    alb.ingress.kubernetes.io/target-type: instance
- spec:
+    alb.ingress.kubernetes.io/tags: Environment=dev,Project=roboshop
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
   rules:
-  - host: "app2.daws88s.online"
+  - host: app2.daws88s.online
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: app2
-          servicePort: 80  
+          service:
+            name: app2
+            port:
+              number: 80
