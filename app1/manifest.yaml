@@ -51,6 +51,8 @@ metadata:
    alb.ingress.kubernetes.io/scheme: internet-facing
    alb.ingress.kubernetes.io/tags: Environment=dev,Project=roboshop
    alb.ingress.kubernetes.io/target-type: ip
+   alb.ingress.kubernetes.io/healthcheck-path: /
+   alb.ingress.kubernetes.io/success-codes: "200"
 spec:
   ingressClassName: alb
   rules:
