@@ -52,6 +52,7 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/group.name: roboshop
 spec:
+  ingressClassName: alb
   rules:
     - host: "app1.daws88s.quest"
       http:
